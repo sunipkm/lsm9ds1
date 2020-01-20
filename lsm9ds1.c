@@ -45,7 +45,23 @@ int lsm9ds1_init(lsm9ds1 *dev, uint8_t xl_addr, uint8_t mag_addr)
     write(dev->accel_file, &obuf, 2);
     obuf[0] = LSM9DS1_CTRL_REG6_XL;
     write(dev->accel_file, &obuf, 2);
-    return 1;
+
+    // also configure magnetometer for SPACE HAUC use I2C_SLAVE
+    MAG_DATA_RATE drate;
+    drate.data_rate = 0b101;
+    drate.fast_odr = 0;
+    drate.operative_mode = 0b11;
+    drate.temp_comp = 1;
+    MAG_RESET rst;
+    rst.full_scale = 0b00;
+    rst.reboot = 0;
+    rst.soft_rst = 0;
+    MAG_DATA_READ dread;
+    dread.bdu = 0;
+    dread.fast_read = 0;
+    int mag_stat = lsm9ds1_config_mag(dev, drate, rst, dread);
+
+    return 1 & mag_stat;
 }
 
 int lsm9ds1_config_mag(lsm9ds1 *dev, MAG_DATA_RATE datarate, MAG_RESET rst, MAG_DATA_READ dread)
@@ -159,4 +175,11 @@ int lsm9ds1_offset_mag(lsm9ds1 *dev, short *offset)
         }
     }
     return 1;
+}
+
+void lsm9ds1_destroy(lsm9ds1 *dev)
+{
+    close(dev->accel_file);
+    close(dev->mag_file);
+    free(dev);
 }

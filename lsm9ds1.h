@@ -156,6 +156,8 @@ typedef struct
  * 
  * Opens the file descriptor for the Accel+Gyro and Magnetometer, powers down the
  * Accel+Gyro.
+ * 
+ * Configures the magnetometer with SPACE-HAUC specific settings.
  */
 int lsm9ds1_init(lsm9ds1 *, uint8_t, uint8_t);
 
@@ -177,3 +179,8 @@ int lsm9ds1_read_mag(lsm9ds1 *, short *);
  * Set the mag field offsets using the array, order: X Y Z
  */
 int lsm9ds1_offset_mag(lsm9ds1 *, short *);
+/*
+ * lsm9ds1_destroy(lsm9ds1*):
+ * Closes the file descriptors for the mag and accel and frees the allocated memory.
+ */
+void lsm9ds1_destroy(lsm9ds1 *);

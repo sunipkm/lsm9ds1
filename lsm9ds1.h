@@ -9,7 +9,7 @@
 #include <string.h>
 #include <sys/ioctl.h>
 
-#define MAG_I2C_FIle "/dev/i2c-0"
+#define MAG_I2C_FIle "/dev/i2c-1"
 
 #define LSM9DS1_XL_ADDR 0x6b
 #define LSM9DS1_MAG_ADDR 0x1e
